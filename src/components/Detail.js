@@ -34,10 +34,12 @@ function Detail() {
       </Control>
       <SubTitle>Neque porro quisquam est qui dolorem ipsum</SubTitle>
       <Description>
-        Lorem Ipsum is simply dummy text of the printing and typesetting
-        industry. Lorem Ipsum has been the industry's standard dummy text ever
-        since the 1500s, when an unknown printer took a galley of type and
-        scrambled it to make a type specimen book.
+        Mr. Burns goes under cover at the nuclear power plant and becomes
+        friends with Homer and the gang.Mr. Burns goes under cover at the
+        nuclear power plant and becomes friends with Homer and the gang.Mr.
+        Burns goes under cover at the nuclear power plant and becomes friends
+        with Homer and the gang.Mr. Burns goes under cover at the nuclear power
+        plant and becomes friends with Homer and the gang.
       </Description>
     </Container>
   );
@@ -81,6 +83,7 @@ const ImageTitle = styled.div`
     height: 100%;
     object-fit: contain;
   }
+  margin-top: 60px;
 `;
 
 const Control = styled.div`
@@ -138,7 +141,15 @@ const SubTitle = styled.div`
 `;
 const Description = styled.div`
   line-height: 1.54;
-  font-size: 20px;
+  font-size: 18px;
   margin-top: 16px;
   color: rgb(249, 249, 249);
+  max-width: 700px;
+
+  //keyword: line-clamp
+
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
 `;
