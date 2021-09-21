@@ -1,4 +1,4 @@
-import { SET_MOVIES, SELECT_MOVIES } from './types';
+import { SET_MOVIES, SET_USER_LOGIN, SET_SIGN_OUT } from './types';
 
 export const setMovies = (movies) => {
   return {
@@ -7,8 +7,15 @@ export const setMovies = (movies) => {
   };
 };
 
-export const selectMovies = () => {
+export const setUserLogin = (user) => {
   return {
-    type: SELECT_MOVIES,
+    type: SET_USER_LOGIN,
+    payload: user,
+  };
+};
+
+export const signOut = () => {
+  return {
+    type: SET_SIGN_OUT,
   };
 };

@@ -1,20 +1,33 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { useParams, useHistory } from 'react-router-dom';
+import db from '../firebase';
 
 function Detail() {
+  const { id } = useParams();
+  const history = useHistory();
+  const [movie, setMovie] = useState({});
+
+  useEffect(() => {
+    db.collection('movies')
+      .doc(id)
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          setMovie(doc.data());
+        } else {
+          history.push('/');
+        }
+      });
+  }, []);
+
   return (
     <Container>
       <Background>
-        <img
-          src="https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/90042E65529C5A363E3EE4862316D9532C8C57C33724F4DD6C8DEC4450D89491/scale?width=2880&aspectRatio=1.78&format=jpeg"
-          alt=""
-        />
+        <img src={movie.backgroundImg} alt="" />
       </Background>
       <ImageTitle>
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/b/b7/The_logo_simpsons_yellow.png"
-          alt=""
-        />
+        <img src={movie.titleImg} alt="" />
       </ImageTitle>
       <Control>
         <PlayButton>
@@ -32,15 +45,8 @@ function Detail() {
           <img src="/images/group-icon.png" alt="" />
         </GroupWatchButton>
       </Control>
-      <SubTitle>Neque porro quisquam est qui dolorem ipsum</SubTitle>
-      <Description>
-        Mr. Burns goes under cover at the nuclear power plant and becomes
-        friends with Homer and the gang.Mr. Burns goes under cover at the
-        nuclear power plant and becomes friends with Homer and the gang.Mr.
-        Burns goes under cover at the nuclear power plant and becomes friends
-        with Homer and the gang.Mr. Burns goes under cover at the nuclear power
-        plant and becomes friends with Homer and the gang.
-      </Description>
+      <SubTitle>{movie.subTitle}</SubTitle>
+      <Description>{movie.description}</Description>
     </Container>
   );
 }
@@ -135,9 +141,9 @@ const GroupWatchButton = styled(AddButton)`
 `;
 const SubTitle = styled.div`
   color: rgb(249, 249, 249);
-  font-size: 15px;
+  font-size: 14px;
   min-height: 20px;
-  margin-top: 26px;
+  margin-top: 22px;
 `;
 const Description = styled.div`
   line-height: 1.54;

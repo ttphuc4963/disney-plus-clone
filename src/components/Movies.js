@@ -1,20 +1,21 @@
 import React from 'react';
 import styled from 'styled-components';
-
+import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { selectMovies } from '../actions';
 
 function Movies() {
   const movies = useSelector((state) => state.movies);
   return (
     <div>
       <Container>
-        <h3> Recommended for You</h3>
+        <h3>Recommended for You</h3>
         <Content>
           {movies &&
             movies.map((movie) => (
               <Wrap key={movie.id}>
-                <img src={movie.cardImg} alt="" />
+                <Link to={`/detail/${movie.id}`}>
+                  <img src={movie.cardImg} alt="" />
+                </Link>
               </Wrap>
             ))}
         </Content>
@@ -25,7 +26,11 @@ function Movies() {
 
 export default Movies;
 
-const Container = styled.div``;
+const Container = styled.div`
+  h3 {
+    font-weight: 500;
+  }
+`;
 
 const Content = styled.div`
   display: grid;

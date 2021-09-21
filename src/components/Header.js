@@ -1,37 +1,74 @@
 import React from 'react';
 import styled from 'styled-components';
+import { auth, provider } from '../firebase';
+import { Link } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { setUserLogin, signOut } from '../actions';
 
 function Header() {
+  const userName = useSelector((state) => state.user.name);
+  const userPhoto = useSelector((state) => state.user.photo);
+  const dispatch = useDispatch();
+
+  const signIn = () => {
+    auth.signInWithPopup(provider).then((result) => {
+      const user = result.user;
+      console.log({
+        email: user.email,
+        name: user.displayName,
+        photo: user.photoURL,
+      });
+      dispatch(
+        setUserLogin({
+          email: user.email,
+          name: user.displayName,
+          photo: user.photoURL,
+        })
+      );
+    });
+  };
   return (
     <Nav>
-      <Logo src="/images/logo.svg" />
-      <NavMenu>
-        <a>
-          <img src="/images/home-icon.svg" alt="" />
-          <span>HOME</span>
-        </a>
-        <a>
-          <img src="/images/search-icon.svg" alt="" />
-          <span>SEARCH</span>
-        </a>
-        <a>
-          <img src="/images/watchlist-icon.svg" alt="" />
-          <span>WATCHLIST</span>
-        </a>
-        <a>
-          <img src="/images/original-icon.svg" alt="" />
-          <span>ORIGINALS</span>
-        </a>
-        <a>
-          <img src="/images/movie-icon.svg" alt="" />
-          <span>MOVIES</span>
-        </a>
-        <a>
-          <img src="/images/series-icon.svg" alt="" />
-          <span>SERIES</span>
-        </a>
-      </NavMenu>
-      <UserImg src="https://scontent.fvca1-1.fna.fbcdn.net/v/t39.30808-6/241496820_3059596747620924_7015950603068095091_n.jpg?_nc_cat=102&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=LVQBCC54AL8AX9CHsHL&_nc_ht=scontent.fvca1-1.fna&oh=31d106caa7d706cb3cf7c0f031cc9858&oe=614B27B4"></UserImg>
+      <Link to="/">
+        <Logo src="/images/logo.svg" />
+      </Link>
+      {!userName ? (
+        <LoginContainer>
+          <Login onClick={signIn}>Login</Login>
+        </LoginContainer>
+      ) : (
+        <>
+          <NavMenu>
+            <Link to="/">
+              <img src="/images/home-icon.svg" alt="" />
+              <span>HOME</span>
+            </Link>
+            <Link to="#">
+              <img src="/images/search-icon.svg" alt="" />
+              <span>SEARCH</span>
+            </Link>
+            <Link to="3">
+              <img src="/images/watchlist-icon.svg" alt="" />
+              <span>WATCHLIST</span>
+            </Link>
+            <Link to="#">
+              <img src="/images/original-icon.svg" alt="" />
+              <span>ORIGINALS</span>
+            </Link>
+            <Link to="#">
+              <img src="/images/movie-icon.svg" alt="" />
+              <span>MOVIES</span>
+            </Link>
+            <Link to="#">
+              <img src="/images/series-icon.svg" alt="" />
+              <span>SERIES</span>
+            </Link>
+          </NavMenu>
+
+          <UserImg src={userPhoto}></UserImg>
+          {/* <SignOut className="logout">logout</SignOut> */}
+        </>
+      )}
     </Nav>
   );
 }
@@ -70,6 +107,7 @@ const NavMenu = styled.div`
       letter-spacing: 1.42px;
       text-transform: uppercase;
       position: relative;
+      color: white;
 
       &:after {
         content: '';
@@ -101,3 +139,54 @@ const UserImg = styled.img`
   border-radius: 50%;
   cursor: pointer;
 `;
+
+const Login = styled.button`
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: 1px solid #f9f9f9;
+  padding: 8px 16px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  transition: all 0.2s ease 0s;
+  letter-spacing: 1.5px;
+
+  &:hover {
+    background-color: #f9f9f9;
+    color: black;
+    border-color: transparent;
+  }
+`;
+
+const LoginContainer = styled.div`
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+`;
+
+// const UserButton = styled.div`
+//   display: flex;
+//   align-items: center;
+//   width: 48px;
+//   transition: width 0.35s;
+//   &:hover .logout {
+//     display: block;
+//   }
+//   &:hover {
+//     width: 150px;
+//   }
+// `;
+
+// const SignOut = styled.button`
+//   margin-left: 12px;
+//   cursor: pointer;
+//   background-color: rgba(0, 0, 0, 0.6);
+//   color: white;
+//   border: 1px solid #f9f9f9;
+//   padding: 8px 16px;
+//   border-radius: 4px;
+//   text-transform: uppercase;
+//   transition: all 0.3s;
+//   letter-spacing: 1.5px;
+//   display: none;
+// `;
