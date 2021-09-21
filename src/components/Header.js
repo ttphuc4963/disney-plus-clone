@@ -1,23 +1,35 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { auth, provider } from '../firebase';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { setUserLogin, signOut } from '../actions';
+import { setUserLogin, setSignOut } from '../actions';
+import { useHistory } from 'react-router-dom';
 
 function Header() {
+  const history = useHistory();
   const userName = useSelector((state) => state.user.name);
   const userPhoto = useSelector((state) => state.user.photo);
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        dispatch(
+          setUserLogin({
+            email: user.email,
+            name: user.displayName,
+            photo: user.photoURL,
+          })
+        );
+        history.push('/');
+      }
+    });
+  }, []);
+
   const signIn = () => {
     auth.signInWithPopup(provider).then((result) => {
       const user = result.user;
-      console.log({
-        email: user.email,
-        name: user.displayName,
-        photo: user.photoURL,
-      });
       dispatch(
         setUserLogin({
           email: user.email,
@@ -25,6 +37,14 @@ function Header() {
           photo: user.photoURL,
         })
       );
+      history.push('/');
+    });
+  };
+
+  const signOut = () => {
+    auth.signOut().then(() => {
+      dispatch(setSignOut());
+      history.push('/login');
     });
   };
   return (
@@ -65,7 +85,7 @@ function Header() {
             </Link>
           </NavMenu>
 
-          <UserImg src={userPhoto}></UserImg>
+          <UserImg onClick={signOut} src={userPhoto}></UserImg>
           {/* <SignOut className="logout">logout</SignOut> */}
         </>
       )}

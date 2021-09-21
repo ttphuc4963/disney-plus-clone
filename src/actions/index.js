@@ -14,7 +14,7 @@ export const setUserLogin = (user) => {
   };
 };
 
-export const signOut = () => {
+export const setSignOut = () => {
   return {
     type: SET_SIGN_OUT,
   };
